@@ -1,0 +1,183 @@
+<Page x:Class="ZapretGate.Views.Pages.SettingsPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+      xmlns:viewModels="clr-namespace:ZapretGate.ViewModels"
+      Title="Настройки"
+      Background="Transparent"
+      d:DataContext="{d:DesignInstance viewModels:SettingsViewModel}"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      mc:Ignorable="d">
+
+    <Grid Background="Transparent">
+        <StackPanel Margin="36,24,36,40" 
+                    HorizontalAlignment="Stretch">
+            
+            <!-- Блок расположения Zapret -->
+            <StackPanel Margin="0,0,0,24">
+                <TextBlock Text="Расположение Zapret" 
+                           FontSize="16" 
+                           FontWeight="SemiBold" 
+                           Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                           Margin="0,0,0,12" />
+
+                <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                        CornerRadius="10"
+                        Padding="18,14"
+                        BorderThickness="1"
+                        BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Margin="0,0,16,0">
+                            <TextBlock Text="Корневой каталог" FontWeight="Medium" Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                            <TextBlock Text="{Binding ZapretPath}" FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}" TextTrimming="CharacterEllipsis" Margin="0,3,0,0" />
+                        </StackPanel>
+                        <ui:Button Grid.Column="1" 
+                                   Content="Обзор..." 
+                                   Command="{Binding BrowseFolderCommand}" 
+                                   VerticalAlignment="Center" />
+                    </Grid>
+                </Border>
+                <TextBlock Text="{Binding PathStatusMessage}" FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="4,6,0,0" />
+            </StackPanel>
+
+            <!-- Блок обновления Zapret -->
+            <StackPanel Margin="0,0,0,24">
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
+                    <TextBlock Text="Обновление" 
+                               FontSize="16" 
+                               FontWeight="SemiBold" 
+                               Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                </StackPanel>
+
+                <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                        CornerRadius="10"
+                        Padding="18,14"
+                        BorderThickness="1"
+                        BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel VerticalAlignment="Center" Margin="0,0,16,0">
+                            <TextBlock Text="Репозиторий zapret-discord-youtube" FontWeight="Medium" Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                            <TextBlock Text="{Binding ZapretVersionInfo, TargetNullValue='Версия не определена', FallbackValue='Версия не определена'}" 
+                                       FontSize="12" 
+                                       Foreground="{DynamicResource AccentTextFillColorPrimaryBrush}" 
+                                       FontWeight="SemiBold"
+                                       Margin="0,3,0,0" />
+                        </StackPanel>
+                        <ui:Button Grid.Column="1" 
+                                   Content="Обновить Zapret" 
+                                   Appearance="Secondary"
+                                   Command="{Binding UpdateZapretFilesCommand}" 
+                                   VerticalAlignment="Center" />
+                    </Grid>
+                </Border>
+            </StackPanel>
+            
+            <StackPanel Margin="0,0,0,24">
+                <TextBlock Text="Режимы автозапуска" 
+                           FontSize="16" 
+                           FontWeight="SemiBold" 
+                           Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                           Margin="0,0,0,12" />
+                
+                <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                        CornerRadius="10"
+                        Padding="18,14"
+                        BorderThickness="1"
+                        BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+                        Margin="0,0,0,10">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel VerticalAlignment="Center">
+                            <TextBlock Text="Автозапуск" FontSize="14" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                            <TextBlock Text="Запускать приложение ZapretGate при входе в Windows" FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,2,0,0" />
+                        </StackPanel>
+                        <ui:ToggleSwitch Grid.Column="1" IsChecked="{Binding IsAppAutoStart}" />
+                    </Grid>
+                </Border>
+                
+                <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                        CornerRadius="10"
+                        Padding="18,14"
+                        BorderThickness="1"
+                        BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel VerticalAlignment="Center">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Ультра-Автозапуск" FontSize="14" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                            </StackPanel>
+                            <TextBlock Text="Автоматический запуск ранее выбранной стратегии вместе с приложением" FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,2,0,0" />
+                        </StackPanel>
+                        <ui:ToggleSwitch Grid.Column="1" IsChecked="{Binding IsAutoConnect}" />
+                    </Grid>
+                </Border>
+            </StackPanel>
+            
+            <StackPanel Margin="0,0,0,24">
+                <TextBlock Text="Оформление и тема" 
+                           FontSize="16" 
+                           FontWeight="SemiBold" 
+                           Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                           Margin="0,0,0,12" />
+
+                <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                        CornerRadius="10"
+                        Padding="18,14"
+                        BorderThickness="1"
+                        BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="220" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel VerticalAlignment="Center" Margin="0,0,16,0">
+                            <TextBlock Text="Стиль оформления" FontWeight="Medium" Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                            <TextBlock Text="Тема меняет фон приложения, карточки и акцентные элементы" FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,2,0,0" />
+                        </StackPanel>
+                        <ComboBox Grid.Column="1" 
+                                  ItemsSource="{Binding AvailableThemes}" 
+                                  SelectedItem="{Binding SelectedTheme}" 
+                                  HorizontalAlignment="Stretch"
+                                  VerticalAlignment="Center" />
+                    </Grid>
+                </Border>
+            </StackPanel>
+
+            <!-- Блок обратной связи -->
+            <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                    CornerRadius="10"
+                    Padding="18,14"
+                    BorderThickness="1"
+                    BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+                    Margin="0,8,0,0">
+                <TextBlock FontSize="13" Foreground="{DynamicResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" LineHeight="20">
+                    <Run Text="Возникли проблемы? Перед тем как создавать Issue в " />
+                    <Hyperlink NavigateUri="https://github.com/AlaskaGLHF/ZapretGate/issues" RequestNavigate="Hyperlink_RequestNavigate">
+                        <Run Text="репозитории ZapretGate" />
+                    </Hyperlink>
+                    <Run Text=", пожалуйста, убедитесь, что ошибка связана именно с интерфейсом программы, а не со скриптами или бинарниками из репозитория " />
+                    <Hyperlink NavigateUri="https://github.com/Flowseal/zapret-discord-youtube" RequestNavigate="Hyperlink_RequestNavigate">
+                        <Run Text="Flowseal" />
+                    </Hyperlink>
+                    <Run Text="." />
+                </TextBlock>
+            </Border>
+
+        </StackPanel>
+    </Grid>
+</Page>

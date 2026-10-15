@@ -1,0 +1,294 @@
+<Page x:Class="ZapretGate.Views.Pages.DashboardPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+      xmlns:viewModels="clr-namespace:ZapretGate.ViewModels"
+      Title="Главная"
+      Background="Transparent"
+      d:DataContext="{d:DesignInstance viewModels:MainViewModel}"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      mc:Ignorable="d">
+
+    <Grid Background="Transparent">
+        <ScrollViewer x:Name="DashboardScrollViewer"
+                      Margin="36,16,20,16" 
+                      Padding="0,0,16,40"
+                      VerticalScrollBarVisibility="Auto" 
+                      HorizontalScrollBarVisibility="Disabled"
+                      CanContentScroll="False"
+                      Focusable="False">
+            <StackPanel VerticalAlignment="Top"
+                        HorizontalAlignment="Stretch">
+                
+                <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                        CornerRadius="10"
+                        Padding="18,14"
+                        BorderThickness="1"
+                        BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+                        Margin="0,0,0,10"
+                        HorizontalAlignment="Stretch">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1.2*"/>
+                            <ColumnDefinition Width="2*" MinWidth="220" />
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel VerticalAlignment="Center" Margin="0,0,16,0">
+                            <TextBlock Text="Стратегия обхода" 
+                                       FontSize="14" 
+                                       FontWeight="SemiBold" 
+                                       Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                            <TextBlock Text="Активный профиль правил winws" 
+                                       FontSize="12" 
+                                       TextWrapping="Wrap"
+                                       Foreground="{DynamicResource TextFillColorSecondaryBrush}" 
+                                       Margin="0,3,0,0" />
+                        </StackPanel>
+
+                        <ComboBox Grid.Column="1"
+                                  ItemsSource="{Binding Strategies}"
+                                  SelectedItem="{Binding SelectedStrategy, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                  DisplayMemberPath="DisplayTitle"
+                                  IsEnabled="{Binding CanChangeSettings}"
+                                  HorizontalAlignment="Stretch"
+                                  VerticalAlignment="Center" />
+                    </Grid>
+                </Border>
+                
+                <Grid Margin="0,0,0,8" HorizontalAlignment="Stretch">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="10" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    
+                    <Border Grid.Column="0" 
+                            Background="{DynamicResource CardBackgroundFillColorDefaultBrush}" 
+                            BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}" 
+                            BorderThickness="1" 
+                            CornerRadius="10" 
+                            Padding="14,12"
+                            HorizontalAlignment="Stretch">
+                        <StackPanel>
+                            <TextBlock Text="Игровой фильтр" FontWeight="SemiBold" FontSize="12" Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                            <TextBlock Text="Исключает игровые порты (1024-65535) для снижения пинга в играх." 
+                                       FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" Margin="0,2,0,8" />
+                            
+                            <ComboBox SelectedIndex="{Binding SelectedGameFilterIndex, Mode=TwoWay}" 
+                                      IsEnabled="{Binding CanChangeSettings}"
+                                      HorizontalAlignment="Stretch">
+                                <ComboBoxItem Content="Отключен" />
+                                <ComboBoxItem Content="TCP и UDP (Полный)" />
+                                <ComboBoxItem Content="Только TCP" />
+                                <ComboBoxItem Content="Только UDP" />
+                                <ComboBoxItem Content="Кастомные порты (из Сервиса)" />
+                            </ComboBox>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Grid.Column="2" 
+                            Background="{DynamicResource CardBackgroundFillColorDefaultBrush}" 
+                            BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}" 
+                            BorderThickness="1" 
+                            CornerRadius="10" 
+                            Padding="14,12"
+                            HorizontalAlignment="Stretch">
+                        <StackPanel>
+                            <TextBlock Text="Фильтрация IPSet" FontWeight="SemiBold" FontSize="12" Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                            <TextBlock Text="LOADED — списки; ANY — весь трафик; NONE — пропуск всех IP." 
+                                       FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" Margin="0,2,0,8" />
+
+                            <ComboBox SelectedIndex="{Binding SelectedIpSetModeIndex, Mode=TwoWay}" 
+                                      IsEnabled="{Binding CanChangeSettings}"
+                                      HorizontalAlignment="Stretch">
+                                <ComboBoxItem Content="LOADED (Активен)" />
+                                <ComboBoxItem Content="NONE (Игнорировать)" />
+                                <ComboBoxItem Content="ANY (Весь интернет)" />
+                            </ComboBox>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+
+                <Grid HorizontalAlignment="Stretch" Margin="0,8,0,0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <Viewbox Grid.Row="0"
+                             HorizontalAlignment="Center" 
+                             VerticalAlignment="Center"
+                             Stretch="Uniform"
+                             MinHeight="120"
+                             MaxHeight="220"
+                             Margin="0,10">
+                        <Grid Width="180" Height="180">
+                            
+                            <Button Command="{Binding ToggleServiceCommand}"
+                                    Width="160"
+                                    Height="160"
+                                    Cursor="Hand"
+                                    BorderThickness="0"
+                                    Background="Transparent"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center">
+                                <Button.Template>
+                                    <ControlTemplate TargetType="Button">
+                                        <Grid>
+                                            <Border x:Name="GlowBorder"
+                                                    CornerRadius="80"
+                                                    Background="{DynamicResource AccentTextFillColorPrimaryBrush}"
+                                                    Opacity="0">
+                                                <Border.Effect>
+                                                    <DropShadowEffect BlurRadius="30"
+                                                                      ShadowDepth="0"
+                                                                      Opacity="0.8" />
+                                                </Border.Effect>
+                                            </Border>
+                                            
+                                            <Ellipse x:Name="BtnOuterRing"
+                                                     Fill="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                                                     Stroke="{DynamicResource CardStrokeColorDefaultBrush}"
+                                                     StrokeThickness="2" />
+                                            
+                                            <Ellipse x:Name="BtnInnerCore"
+                                                     Margin="10"
+                                                     Stroke="{DynamicResource CardStrokeColorDefaultBrush}"
+                                                     StrokeThickness="1">
+                                                <Ellipse.Fill>
+                                                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                                        <GradientStop Color="#1E1916" Offset="0" />
+                                                        <GradientStop Color="#120F0D" Offset="1" />
+                                                    </LinearGradientBrush>
+                                                </Ellipse.Fill>
+                                            </Ellipse>
+                                            
+                                            <ui:SymbolIcon x:Name="LockedIcon"
+                                                         Symbol="LockClosed24" 
+                                                         FontSize="54"
+                                                         Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                                         HorizontalAlignment="Center"
+                                                         VerticalAlignment="Center"
+                                                         Visibility="Visible" />
+                                            
+                                            <ui:SymbolIcon x:Name="UnlockedIcon"
+                                                         Symbol="LockOpen24" 
+                                                         FontSize="54"
+                                                         Foreground="#34D399"
+                                                         HorizontalAlignment="Center"
+                                                         VerticalAlignment="Center"
+                                                         Visibility="Collapsed" />
+                                        </Grid>
+
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter TargetName="GlowBorder" Property="Opacity" Value="0.28" />
+                                                <Setter TargetName="BtnOuterRing" Property="Stroke" Value="{DynamicResource AccentTextFillColorPrimaryBrush}" />
+                                                <Setter TargetName="LockedIcon" Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+                                            </Trigger>
+                                            
+                                            <DataTrigger Binding="{Binding IsStarting}" Value="True">
+                                                <Setter TargetName="BtnOuterRing" Property="Stroke" Value="#F59E0B" />
+                                                <Setter TargetName="LockedIcon" Property="Foreground" Value="#FBBF24" />
+                                                <Setter TargetName="GlowBorder" Property="Background" Value="#F59E0B" />
+                                                <DataTrigger.EnterActions>
+                                                    <BeginStoryboard Name="StartingPulse">
+                                                        <Storyboard RepeatBehavior="Forever">
+                                                            <DoubleAnimation Storyboard.TargetName="GlowBorder"
+                                                                             Storyboard.TargetProperty="Opacity"
+                                                                             From="0.1" To="0.55"
+                                                                             Duration="0:0:0.55"
+                                                                             AutoReverse="True" />
+                                                        </Storyboard>
+                                                    </BeginStoryboard>
+                                                </DataTrigger.EnterActions>
+                                                <DataTrigger.ExitActions>
+                                                    <StopStoryboard BeginStoryboardName="StartingPulse" />
+                                                </DataTrigger.ExitActions>
+                                            </DataTrigger>
+                                            
+                                            <DataTrigger Binding="{Binding IsRunning}" Value="True">
+                                                <Setter TargetName="LockedIcon" Property="Visibility" Value="Collapsed" />
+                                                <Setter TargetName="UnlockedIcon" Property="Visibility" Value="Visible" />
+                                                <Setter TargetName="GlowBorder" Property="Background" Value="#10B981" />
+                                                <Setter TargetName="GlowBorder" Property="Opacity" Value="0.35" />
+                                                <Setter TargetName="BtnOuterRing" Property="Stroke" Value="#10B981" />
+                                                <Setter TargetName="BtnInnerCore" Property="Fill">
+                                                    <Setter.Value>
+                                                        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                                            <GradientStop Color="#064E3B" Offset="0" />
+                                                            <GradientStop Color="#022C22" Offset="1" />
+                                                        </LinearGradientBrush>
+                                                    </Setter.Value>
+                                                </Setter>
+                                            </DataTrigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Button.Template>
+                            </Button>
+                        </Grid>
+                    </Viewbox>
+                    
+                    <TextBlock Grid.Row="1"
+                               Text="{Binding StatusDescription}"
+                               Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                               FontSize="15"
+                               FontWeight="SemiBold"
+                               HorizontalAlignment="Center"
+                               TextAlignment="Center"
+                               Margin="0,4,0,0" />
+                    
+                    <TextBlock Grid.Row="2"
+                               Text="{Binding ElapsedTime}"
+                               Foreground="{DynamicResource AccentTextFillColorPrimaryBrush}"
+                               FontSize="22"
+                               FontFamily="Consolas"
+                               FontWeight="Bold"
+                               HorizontalAlignment="Center"
+                               TextAlignment="Center"
+                               Height="30"
+                               Margin="0,4,0,0" />
+                </Grid>
+                
+                <ui:InfoBar Severity="Error"
+                            Title="Внимание"
+                            Message="{Binding ErrorMessage}"
+                            Margin="0,10,0,0"
+                            HorizontalAlignment="Stretch">
+                    <ui:InfoBar.Style>
+                        <Style TargetType="ui:InfoBar">
+                            <Setter Property="IsOpen" Value="True" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding ErrorMessage}" Value="">
+                                    <Setter Property="IsOpen" Value="False" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding ErrorMessage}" Value="{x:Null}">
+                                    <Setter Property="IsOpen" Value="False" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ui:InfoBar.Style>
+                </ui:InfoBar>
+            </StackPanel>
+        </ScrollViewer>
+        
+        <Border Background="{DynamicResource ControlFillColorSecondaryBrush}"
+                BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+                BorderThickness="1"
+                CornerRadius="4"
+                Padding="8,3"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Bottom"
+                Margin="0,0,28,16"
+                IsHitTestVisible="True">
+            <TextBlock FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}">
+                <Run Text="Разработчик: " />
+                <Hyperlink NavigateUri="https://github.com/AlaskaGLHF" RequestNavigate="Hyperlink_RequestNavigate">
+                    <Run Text="AlaskaGLHF" />
+                </Hyperlink>
+            </TextBlock>
+        </Border>
+    </Grid>
+</Page>

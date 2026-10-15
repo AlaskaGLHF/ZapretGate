@@ -1,0 +1,41 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>WinExe</OutputType>
+        <TargetFramework>net8.0-windows</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <UseWPF>true</UseWPF>
+        <UseWindowsForms>true</UseWindowsForms>
+        <ApplicationIcon>Resources\app.ico</ApplicationIcon>
+        <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+        <SelfContained>true</SelfContained>
+        <PublishSingleFile>false</PublishSingleFile>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.12" />
+        <PackageReference Include="WPF-UI" Version="4.3.0" />
+        <PackageReference Include="XamlAnimatedGif" Version="2.3.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Page Update="Views\Pages\SettingsPage.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Compile Update="Views\Pages\SettingsPage.cs">
+            <DependentUpon>SettingsPage.xaml</DependentUpon>
+        </Compile>
+    </ItemGroup>
+
+    <ItemGroup>
+    <Resource Include="Resources\app.ico" />
+    <None Remove="Resources\loading.gif" />
+    <Resource Include="Resources\loading.gif" />
+    </ItemGroup>
+
+</Project>

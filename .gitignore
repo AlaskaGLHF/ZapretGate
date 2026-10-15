@@ -1,0 +1,22 @@
+# Visual Studio / Rider
+.vs/
+*.user
+*.suo
+*.cache
+*.idea
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# Build results & Output
+bin/
+obj/
+publish/
+x64/
+x86/
+Debug/
+Release/
+
+# Environment & OS files
+.DS_Store
+Thumbs.db

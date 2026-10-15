@@ -1,0 +1,261 @@
+<Page x:Class="ZapretGate.Views.Pages.ServicePage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+      xmlns:viewModels="clr-namespace:ZapretGate.ViewModels"
+      Title="Сервис"
+      Background="Transparent"
+      d:DataContext="{d:DesignInstance viewModels:ServiceViewModel}"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      mc:Ignorable="d">
+
+    <Grid Background="Transparent">
+        <StackPanel Margin="36,16,36,40" 
+                    VerticalAlignment="Top" 
+                    HorizontalAlignment="Stretch">
+                
+            <!-- Тестирование и автоподбор -->
+            <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                    CornerRadius="10"
+                    Padding="20,16"
+                    BorderThickness="1"
+                    BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+                    Margin="0,0,0,14">
+                <StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Тестирование и автоподбор стратегий" FontSize="15" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                    </StackPanel>
+
+                    <TextBlock Text="Автоматический перебор всех конфигураций zapret с замером реального пинга до серверов YouTube и голосовых шлюзов Discord."
+                               FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" Margin="0,4,0,12" />
+
+                    <StackPanel Orientation="Horizontal">
+                        <ui:Button Content="Стандартный тест (HTTP/Ping)" 
+                                   Icon="{ui:SymbolIcon Symbol=PlayCircle24}"
+                                   Appearance="Primary"
+                                   Command="{Binding RunStandardTestCommand}"
+                                   Height="36"
+                                   Margin="0,0,10,0" />
+
+                        <ui:Button Content="DPI Checker (TCP 16-20)" 
+                                   Icon="{ui:SymbolIcon Symbol=ShieldCheckmark24}"
+                                   Appearance="Secondary"
+                                   Command="{Binding RunDpiCheckerCommand}"
+                                   Height="36" />
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+            
+            <!-- Рекомендованная стратегия -->
+            <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                    CornerRadius="10"
+                    Padding="18,14"
+                    BorderThickness="1"
+                    BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+                    Margin="0,0,0,14">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel VerticalAlignment="Center">
+                        <TextBlock Text="Рекомендованная стратегия" FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                        <TextBlock Text="{Binding BestStrategyFound, TargetNullValue='Лучшая стратегия не выявлена', FallbackValue='Лучшая стратегия не выявлена'}" 
+                                   FontSize="15" FontWeight="Bold" Foreground="{DynamicResource AccentTextFillColorPrimaryBrush}" Margin="0,2,0,0" />
+                        <TextBlock Text="Стратегия с наименьшей задержкой отклика и стабильным прохождением DPI" FontSize="11" Foreground="{DynamicResource TextFillColorTertiaryBrush}" Margin="0,2,0,0" TextWrapping="Wrap" />
+                    </StackPanel>
+                    <ui:Button Grid.Column="1" Content="Выбрать для обхода" Appearance="Secondary" Command="{Binding ApplyBestStrategyCommand}" VerticalAlignment="Center" />
+                </Grid>
+            </Border>
+
+            <!-- Кастомные порты игрового фильтра -->
+            <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                    CornerRadius="10"
+                    Padding="18,14"
+                    BorderThickness="1"
+                    BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+                    Margin="0,0,0,14">
+                <StackPanel>
+                    <TextBlock Text="Кастомные порты игрового фильтра" FontWeight="SemiBold" FontSize="13" Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                    <TextBlock Text="Укажите диапазоны портов через запятую (например: 1024-65535, 27000-27030), которые будут исключены из фильтрации." 
+                               FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" Margin="0,2,0,10" />
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <ui:TextBox Grid.Column="0"
+                                    Text="{Binding CustomGamePorts, UpdateSourceTrigger=PropertyChanged}"
+                                    PlaceholderText="1024-65535"
+                                    VerticalAlignment="Center"
+                                    Margin="0,0,10,0" />
+
+                        <ui:Button Grid.Column="1"
+                                   Content="Сохранить порты"
+                                   Appearance="Secondary"
+                                   Command="{Binding SaveCustomPortsCommand}"
+                                   VerticalAlignment="Center" />
+                    </Grid>
+                </StackPanel>
+            </Border>
+            
+            <!-- Подмена активных фейк-пакетов -->
+            <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                    CornerRadius="10"
+                    Padding="18,14"
+                    BorderThickness="1"
+                    BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+                    Margin="0,0,0,14">
+                <StackPanel>
+                    <TextBlock Text="Подмена активных фейк-пакетов (Active Fakes)" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                    <TextBlock Text="Если провайдер научился распознавать сигнатуру обхода, выберите альтернативный бинарный фейк из папки bin/" FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" Margin="0,2,0,12" />
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="12" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <Border Grid.Column="0" Background="{DynamicResource ControlFillColorDefaultBrush}" CornerRadius="8" Padding="12" BorderThickness="1" BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}">
+                            <StackPanel>
+                                <TextBlock Text="Discord UDP Fake" FontSize="11" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                                <TextBlock Text="{Binding CurrentDiscordFake, StringFormat='Текущий: {0}'}" FontSize="10" Foreground="{DynamicResource AccentTextFillColorPrimaryBrush}" Margin="0,2,0,8" />
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <ComboBox ItemsSource="{Binding AvailableFakeFiles}" SelectedItem="{Binding SelectedDiscordFakeFile}" HorizontalAlignment="Stretch" Margin="0,0,8,0" />
+                                    <ui:Button Grid.Column="1" Content="Задать" Appearance="Primary" Command="{Binding ApplyDiscordFakeCommand}" />
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+
+                        <Border Grid.Column="2" Background="{DynamicResource ControlFillColorDefaultBrush}" CornerRadius="8" Padding="12" BorderThickness="1" BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}">
+                            <StackPanel>
+                                <TextBlock Text="GameFilter UDP Fake" FontSize="11" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                                <TextBlock Text="{Binding CurrentGameFake, StringFormat='Текущий: {0}'}" FontSize="10" Foreground="{DynamicResource AccentTextFillColorPrimaryBrush}" Margin="0,2,0,8" />
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <ComboBox ItemsSource="{Binding AvailableFakeFiles}" SelectedItem="{Binding SelectedGameFakeFile}" HorizontalAlignment="Stretch" Margin="0,0,8,0" />
+                                    <ui:Button Grid.Column="1" Content="Задать" Appearance="Primary" Command="{Binding ApplyGameFakeCommand}" />
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+                </StackPanel>
+            </Border>
+            
+            <!-- Пользовательские списки -->
+            <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                    CornerRadius="10"
+                    Padding="18,14"
+                    BorderThickness="1"
+                    BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+                    Margin="0,0,0,14">
+                <StackPanel>
+                    <TextBlock Text="Пользовательские списки (Lists)" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                    <TextBlock Text="Быстрое редактирование персональных доменов и исключений в текстовом редакторе." FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" Margin="0,2,0,10" />
+                    
+                    <WrapPanel Orientation="Horizontal">
+                        <ui:Button Content="Свои домены (list-general-user)" 
+                                   Icon="{ui:SymbolIcon Symbol=DocumentBulletList24}"
+                                   Appearance="Secondary"
+                                   Command="{Binding OpenUserListCommand}" 
+                                   CommandParameter="list-general-user.txt"
+                                   Margin="0,0,8,8" />
+
+                        <ui:Button Content="Исключения доменов (list-exclude-user)" 
+                                   Icon="{ui:SymbolIcon Symbol=DismissCircle24}"
+                                   Appearance="Secondary"
+                                   Command="{Binding OpenUserListCommand}" 
+                                   CommandParameter="list-exclude-user.txt"
+                                   Margin="0,0,8,8" />
+
+                        <ui:Button Content="Исключения IP (ipset-exclude-user)" 
+                                   Icon="{ui:SymbolIcon Symbol=ShieldDismiss24}"
+                                   Appearance="Secondary"
+                                   Command="{Binding OpenUserListCommand}" 
+                                   CommandParameter="ipset-exclude-user.txt"
+                                   Margin="0,0,0,8" />
+                    </WrapPanel>
+                </StackPanel>
+            </Border>
+            
+            <!-- Диагностика, Кэш, Hosts -->
+            <Grid Margin="0,0,0,14">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Border Grid.Column="0" Background="{DynamicResource CardBackgroundFillColorDefaultBrush}" CornerRadius="10" Padding="14" BorderThickness="1" BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}">
+                    <StackPanel>
+                        <TextBlock Text="Диагностика" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                        <TextBlock Text="Проверка служб BFE, WinDivert, AdGuard и VPN." FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" Margin="0,4,0,10" />
+                        <ui:Button Content="Проверить" Appearance="Secondary" HorizontalAlignment="Stretch" Command="{Binding RunDiagnosticsCommand}" />
+                    </StackPanel>
+                </Border>
+
+                <Border Grid.Column="2" Background="{DynamicResource CardBackgroundFillColorDefaultBrush}" CornerRadius="10" Padding="14" BorderThickness="1" BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}">
+                    <StackPanel>
+                        <TextBlock Text="Кэш Discord" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                        <TextBlock Text="Сброс повреждённого кэша и голосовых шлюзов RTC." FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" Margin="0,4,0,10" />
+                        <ui:Button Content="Очистить" Appearance="Secondary" HorizontalAlignment="Stretch" Command="{Binding ClearDiscordCacheCommand}" />
+                    </StackPanel>
+                </Border>
+
+                <Border Grid.Column="4" Background="{DynamicResource CardBackgroundFillColorDefaultBrush}" CornerRadius="10" Padding="14" BorderThickness="1" BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}">
+                    <StackPanel>
+                        <TextBlock Text="Файл Hosts" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                        <TextBlock Text="Проверка и добавление официальных зеркал обхода." FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" Margin="0,4,0,10" />
+                        <ui:Button Content="Обновить Hosts" Appearance="Secondary" HorizontalAlignment="Stretch" Command="{Binding UpdateHostsFileCommand}" />
+                    </StackPanel>
+                </Border>
+            </Grid>
+            
+            <!-- IPSet и автообновление -->
+            <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                    CornerRadius="10"
+                    Padding="18,14"
+                    BorderThickness="1"
+                    BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="12" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    
+                    <StackPanel Grid.Column="0" VerticalAlignment="Center" Margin="0,0,12,0">
+                        <TextBlock Text="Списки IPSet и автообновление zapret" FontWeight="Medium" Foreground="{DynamicResource TextFillColorPrimaryBrush}" TextWrapping="Wrap" />
+                        <TextBlock Text="Загрузка свежего списка ipset-all.txt и проверка новых релизов с GitHub." FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" Margin="0,2,0,0" />
+                    </StackPanel>
+
+                    <ui:ToggleSwitch Grid.Column="1" 
+                                     Content="Автопроверка" 
+                                     IsChecked="{Binding IsAutoUpdateEnabled, Mode=TwoWay}" 
+                                     VerticalAlignment="Center" />
+
+                    <ui:Button Grid.Column="3" 
+                               Content="Обновить IPSet" 
+                               Appearance="Secondary" 
+                               Command="{Binding UpdateIpSetListCommand}" 
+                               VerticalAlignment="Center" />
+                </Grid>
+            </Border>
+
+        </StackPanel>
+    </Grid>
+</Page>

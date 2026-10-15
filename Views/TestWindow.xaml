@@ -1,0 +1,137 @@
+<ui:FluentWindow x:Class="ZapretGate.Views.TestWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+        xmlns:gif="clr-namespace:XamlAnimatedGif;assembly=XamlAnimatedGif"
+        xmlns:viewModels="clr-namespace:ZapretGate.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="Подбор лучшей конфигурации"
+        Height="580" 
+        Width="500"
+        WindowStartupLocation="CenterOwner"
+        WindowBackdropType="None"
+        Background="{DynamicResource ApplicationBackgroundBrush}"
+        ResizeMode="NoResize"
+        d:DataContext="{d:DesignInstance viewModels:TestViewModel}">
+
+    <ui:FluentWindow.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis" />
+    </ui:FluentWindow.Resources>
+
+    <Border Padding="28">
+        <Grid>
+            <Grid VerticalAlignment="Center" HorizontalAlignment="Center">
+                <Grid.Style>
+                    <Style TargetType="Grid">
+                        <Setter Property="Visibility" Value="Visible" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsCompleted}" Value="True">
+                                <Setter Property="Visibility" Value="Collapsed" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Grid.Style>
+
+                <StackPanel HorizontalAlignment="Center">
+                    <Border Width="350" 
+                            Height="350" 
+                            CornerRadius="16" 
+                            ClipToBounds="True" 
+                            HorizontalAlignment="Center"
+                            Margin="0,0,0,18">
+                        <Image x:Name="LoadingGifImage"
+                               Stretch="UniformToFill" />
+                    </Border>
+
+                    <TextBlock Text="Тестирование стратегий zapret" 
+                               FontSize="17" 
+                               FontWeight="SemiBold" 
+                               HorizontalAlignment="Center" 
+                               Foreground="{DynamicResource TextFillColorPrimaryBrush}" 
+                               Margin="0,0,0,6" />
+                    
+                    <TextBlock Text="{Binding CurrentStrategyName, StringFormat='Анализируется: {0}'}" 
+                               FontSize="13" 
+                               FontWeight="Medium"
+                               HorizontalAlignment="Center" 
+                               Foreground="{DynamicResource AccentTextFillColorPrimaryBrush}" 
+                               Margin="0,0,0,16" />
+                    
+                    <ProgressBar Value="{Binding OverallProgress}" 
+                                 Maximum="100" 
+                                 Height="6" 
+                                 Width="380" 
+                                 BorderThickness="0"
+                                 Foreground="{DynamicResource AccentTextFillColorPrimaryBrush}"
+                                 Margin="0,0,0,8" />
+                    
+                    <Grid Width="380" Margin="0,0,0,24">
+                        <TextBlock Text="{Binding StepCounterText}" 
+                                   FontSize="12" 
+                                   Foreground="{DynamicResource TextFillColorSecondaryBrush}" 
+                                   HorizontalAlignment="Left" />
+                        <TextBlock Text="{Binding ProgressPercentageText}" 
+                                   FontSize="12" 
+                                   FontWeight="Bold"
+                                   Foreground="{DynamicResource TextFillColorPrimaryBrush}" 
+                                   HorizontalAlignment="Right" />
+                    </Grid>
+
+                    <ui:Button Content="Отмена" 
+                               Appearance="Secondary" 
+                               Command="{Binding CancelCommand}" 
+                               HorizontalAlignment="Center"
+                               Width="130" />
+                </StackPanel>
+            </Grid>
+            
+            <Grid VerticalAlignment="Center" 
+                  HorizontalAlignment="Center"
+                  Visibility="{Binding IsCompleted, Converter={StaticResource BoolToVis}}">
+                
+                <StackPanel HorizontalAlignment="Center">
+                    <ui:SymbolIcon Symbol="Trophy24" 
+                                   FontSize="52" 
+                                   Foreground="#10B981" 
+                                   HorizontalAlignment="Center" 
+                                   Margin="0,0,0,14" />
+
+                    <TextBlock Text="Тестирование успешно завершено!" 
+                               FontSize="18" 
+                               FontWeight="Bold" 
+                               HorizontalAlignment="Center" 
+                               Foreground="{DynamicResource TextFillColorPrimaryBrush}" 
+                               Margin="0,0,0,6" />
+
+                    <TextBlock Text="На основе анализа вашего провайдера рекомендована:" 
+                               FontSize="12" 
+                               TextAlignment="Center"
+                               Foreground="{DynamicResource TextFillColorSecondaryBrush}" 
+                               Margin="0,0,0,18" />
+
+                    <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                            BorderBrush="{DynamicResource AccentTextFillColorPrimaryBrush}"
+                            BorderThickness="1.5"
+                            CornerRadius="8"
+                            Padding="20,12"
+                            Margin="0,0,0,26"
+                            MinWidth="300">
+                        <TextBlock Text="{Binding BestStrategyName}" 
+                                   FontSize="16" 
+                                   FontWeight="Bold" 
+                                   TextAlignment="Center"
+                                   Foreground="{DynamicResource AccentTextFillColorPrimaryBrush}" />
+                    </Border>
+
+                    <ui:Button Content="Применить и закрыть" 
+                               Appearance="Primary" 
+                               Command="{Binding ApplyAndCloseCommand}" 
+                               HorizontalAlignment="Center" 
+                               Width="220" />
+                </StackPanel>
+            </Grid>
+        </Grid>
+    </Border>
+</ui:FluentWindow>
